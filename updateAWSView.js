@@ -1,9 +1,7 @@
 'use strict';
 
-self.setInterval(rewriteAWS, 1000);
-
-var ec2Map = {};
-var seenInstanceTypes = null;
+self.setInterval(rewriteEC2, 1000);
+self.setInterval(rewriteEBS, 1000);
 
 chrome.runtime.sendMessage({ec2: true}, function (ec2Data) {
     writeEC2Data(ec2Data);
@@ -17,9 +15,21 @@ chrome.runtime.sendMessage({ec2Deprecated : true}, function (ec2Deprecated) {
     writeEC2Data(ec2Deprecated);
 });
 
+var uiToEBSJSONMap = new Map();
+uiToEBSJSONMap.set("Magnetic", "standard");
+uiToEBSJSONMap.set("General Purpose", "gp2");
+
+var ebsMap = {};
+
 function writeEBSData(data) {
-    //Stub - add later
-    return;
+    for(const price of data.prices) {
+        let type = price.attributes["aws:ec2:volumeType"];
+        let cost = parseFloat(price.price.USD);
+
+        if(uiToEBSJSONMap.has(type)) {
+            ebsMap[uiToEBSJSONMap.get(type)] = cost;
+        }
+    }
 }
 
 function writeEC2Data(data) {
@@ -33,7 +43,30 @@ function writeEC2Data(data) {
     }
 }
 
-function rewriteAWS() {
+
+function rewriteEBS() {
+    Object.keys(ebsMap).forEach(function (key) {
+            console.log("Foreach EBS: " + key);
+
+            $("div:contains(" + key + ")").each(function (index, elm) {
+
+                console.log("Looking at div: " + elm);
+               //Only change the div that is in the table => only if the text is inside a <td>
+                if ($(this).closest("td").length === 1) {
+                    if (!elm.textContent.includes("$")) {
+                        elm.innerText += " (" + ebsMap[key] + "$ / GB / month)";
+                    }
+                }
+            });
+    });
+}
+
+
+
+var ec2Map = {};
+var seenInstanceTypes = null;
+
+function rewriteEC2() {
     var tmpInstanceTypesSeen = new Set();
 
     Object.keys(ec2Map).forEach(function (key) {
