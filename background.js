@@ -11,7 +11,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 response.json().then(data => sendResponse(data));
             })
             .catch(function (err) {
-                console.log(err)
+                console.log(err);
             });
     } else if (request.ebs) {
         var url = "https://a0.p.awsstatic.com/pricing/1.0/ec2/region/us-east-1/ebs/index.json";
@@ -21,7 +21,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 response.json().then(data => sendResponse(data));
             })
             .catch(function (err) {
-                console.log(err)
+                console.log(err);
             });
     } else if (request.ec2Deprecated) {
         var url = "https://a0.p.awsstatic.com/pricing/1.0/ec2/region/us-east-1/previous-generation/ondemand/linux/index.json";
@@ -31,7 +31,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 response.json().then(data => sendResponse(data));
             })
             .catch(function (err) {
-                console.log("EC2Deprecated: " + err)
+                console.log(err);
             });
     }
   return true;
