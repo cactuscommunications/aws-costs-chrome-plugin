@@ -1,32 +1,9 @@
 'use strict';
 
 self.setInterval(handleExistingInstanceListPage, 1000);
-
-chrome.runtime.sendMessage({ec2: true}, function (ec2Data) {
-    writeEC2Data(ec2Data);
-});
-
-chrome.runtime.sendMessage({ec2Deprecated: true}, function (ec2Deprecated) {
-    writeEC2Data(ec2Deprecated);
-});
-
-const ec2Map = {};
-
-function writeEC2Data(data) {
-    for (const price of data.prices) {
-        const type = price.attributes["aws:ec2:instanceType"];
-        const cost = {
-            "hour": parseFloat(price.price.USD).toFixed(3),
-            "month": (parseFloat(price.price.USD) * 24 * 30).toFixed(0)
-        };
-        ec2Map[type] = cost;
-    }
-}
-
 self.setInterval(clearCache, 1000);
 
 let prevLocation = null;
-
 let seenInstanceTypes = null;
 
 function clearCache() {

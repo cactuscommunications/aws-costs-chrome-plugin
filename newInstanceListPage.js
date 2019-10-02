@@ -2,23 +2,7 @@
 
 self.setInterval(handleNewInstanceListPage, 1000);
 
-chrome.runtime.sendMessage({ec2: true}, function (ec2Data) {
-    writeEC2Data(ec2Data);
-});
-
-function writeEC2Data(data) {
-    for (const price of data.prices) {
-        const type = price.attributes["aws:ec2:instanceType"];
-        const cost = {
-            "hour": parseFloat(price.price.USD).toFixed(3),
-            "month": (parseFloat(price.price.USD) * 24 * 30).toFixed(0)
-        };
-        ec2Map[type] = cost;
-    }
-}
-
-var ec2Map = {};
-var selectedItem = null;
+let selectedItem = null;
 
 function handleNewInstanceListPage() {
     if (window.location.href.indexOf("#LaunchInstanceWizard:") > -1) {
