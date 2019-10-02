@@ -50,10 +50,10 @@ function rewriteEBS() {
                //Only change the div that is in the table => only if the text is inside a <td>
                 if ($(this).closest("td").length === 1) {
 
-                    const theElm = $(this).parent().prev().children(":first");
-                    if (!theElm.text().includes("$")) {
-                        const numGb = parseInt(theElm.text().split(" ")[0], 10);
-                        theElm.text(theElm.text() + " (" + (ebsMap[key]*numGb) + "$ / month)");
+                    const sizeOfDiskElm = $(this).parent().prev().children(":first");
+                    if (!sizeOfDiskElm.text().includes("$")) {
+                        const numGb = parseInt(sizeOfDiskElm.text().split(" ")[0], 10);
+                        sizeOfDiskElm.text(sizeOfDiskElm.text() + " (" + (ebsMap[key]*numGb) + "$ / month)");
                     }
                 }
             });
