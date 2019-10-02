@@ -29,7 +29,8 @@ function writeEBSData(data) {
 function showVolumeCosts() {
     if(window.location.href.toString().indexOf("#LaunchInstanceWizard:") > -1) {
         $("select#volumeType").each(function (index, elm) {
-            const size = $(this).parent().parent().parent().parent().prev().find("input").first().val();
+            var sizeDiv = $(this).parent().parent().parent().parent().prev();
+            const size = sizeDiv.find("input").first().val();
             const volumeType = $(this).val();
 
             var costPerMonth = 0;
@@ -40,15 +41,14 @@ function showVolumeCosts() {
                 }
             });
 
-            if(!$(this).parent().parent().parent().parent().prev().find("div#aws-cost-div").length) {
-                var sizeDiv = $(this).parent().parent().parent().parent().prev().find("input").first().parent();
-                if (sizeDiv.text().indexOf("$") === -1) {
-                    sizeDiv.append("<div id='aws-cost-div'></div>");
+            if(!sizeDiv.find("div#aws-cost-div").length) {
+                var innerSizeDiv = $(this).parent().parent().parent().parent().prev().find("input").first().parent();
+                if (innerSizeDiv.text().indexOf("$") === -1) {
+                    innerSizeDiv.append("<div id='aws-cost-div'></div>");
                 }
             }
 
-            $(this).parent().parent().parent().parent().prev().find("div#aws-cost-div").text(costPerMonth + "$ / month");
-
+            sizeDiv.find("div#aws-cost-div").text(costPerMonth + "$ / month");
         });
     }
 }
