@@ -8,7 +8,7 @@
   },
   "content_scripts": [
     {
-      "js": [ "jquery-3.4.1.js", "newInstanceListPage.js", "newEBSVolumePage.js", "existingInstanceListPage.js", "existingEBSVolumesListPage.js"],
+      "js": [ "jquery-3.4.1.js", "newInstanceListPage.js", "newEBSVolumePage.js", "existingInstanceListPage.js", "existingEBSVolumesListPage.js", "addStorageToNewInstancePage.js"],
       "matches": ["https://console.aws.amazon.com/*", "https://a0.p.awsstatic.com/*"],
       "run_at" : "document_end"
     }
