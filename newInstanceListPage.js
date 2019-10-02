@@ -10,8 +10,8 @@ function writeEC2Data(data) {
     for (const price of data.prices) {
         var type = price.attributes["aws:ec2:instanceType"];
         var cost = {
-            "hour": parseFloat(price.price.USD).toFixed(4),
-            "month": (parseFloat(price.price.USD) * 24 * 30).toFixed(2)
+            "hour": parseFloat(price.price.USD).toFixed(3),
+            "month": (parseFloat(price.price.USD) * 24 * 30).toFixed(0)
         };
         ec2Map[type] = cost;
     }
