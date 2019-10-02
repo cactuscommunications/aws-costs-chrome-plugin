@@ -49,8 +49,11 @@ function rewriteEBS() {
         $("iframe#storage-gwt-frame").contents().find("div:contains(" + key +")").each(function (index, elm) {
                //Only change the div that is in the table => only if the text is inside a <td>
                 if ($(this).closest("td").length === 1) {
-                    if (!elm.textContent.includes("$")) {
-                        elm.innerText += " (" + ebsMap[key] + "$ / GB / month)";
+
+                    const theElm = $(this).parent().prev().children(":first");
+                    if (!theElm.text().includes("$")) {
+                        const numGb = parseInt(theElm.text().split(" ")[0], 10);
+                        theElm.text(theElm.text() + " (" + (ebsMap[key]*numGb) + "$ / month)");
                     }
                 }
             });
@@ -68,7 +71,6 @@ function rewriteEC2() {
     Object.keys(ec2Map).forEach(function (key) {
         if(seenInstanceTypes == null || seenInstanceTypes.has(key)) {
             $("div:contains(" + key + ")").each(function (index, elm) {
-
                 //Only change the div that is in the table => only if the text is inside a <td>
                 if ($(this).closest("td").length === 1) {
                     if (!elm.textContent.includes("$")) {
