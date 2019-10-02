@@ -3,16 +3,31 @@
 self.setInterval(rewriteEC2, 1000);
 self.setInterval(rewriteEBSTable, 1000);
 self.setInterval(rewriteCreateVolumePage, 1000);
+self.setInterval(clearCache, 1000);
+
+var prevLocation = null;
+
+function clearCache() {
+    if (prevLocation === null) {
+        prevLocation = window.location.href;
+    }
+
+    if (prevLocation.toString().indexOf(window.location.href.toString()) === -1) {
+        console.log("Clearing cache since location has changed from " + prevLocation + " to " + window.location.href);
+        prevLocation = window.location.href;
+        seenInstanceTypes = null;
+    }
+}
 
 chrome.runtime.sendMessage({ec2: true}, function (ec2Data) {
     writeEC2Data(ec2Data);
 });
 
-chrome.runtime.sendMessage({ebs : true}, function (ebsData) {
+chrome.runtime.sendMessage({ebs: true}, function (ebsData) {
     writeEBSData(ebsData);
 });
 
-chrome.runtime.sendMessage({ec2Deprecated : true}, function (ec2Deprecated) {
+chrome.runtime.sendMessage({ec2Deprecated: true}, function (ec2Deprecated) {
     writeEC2Data(ec2Deprecated);
 });
 
@@ -26,11 +41,11 @@ uiToEBSJSONMap.set("Throughput Optimized HDD", "st1");
 var ebsMap = {};
 
 function writeEBSData(data) {
-    for(const price of data.prices) {
+    for (const price of data.prices) {
         let type = price.attributes["aws:ec2:volumeType"];
         let cost = parseFloat(price.price.USD);
 
-        if(uiToEBSJSONMap.has(type)) {
+        if (uiToEBSJSONMap.has(type)) {
             ebsMap[uiToEBSJSONMap.get(type)] = cost;
         }
     }
@@ -58,7 +73,7 @@ function rewriteCreateVolumePage() {
 
     var costPerMonth = 0;
     Object.keys(ebsMap).forEach(function (key) {
-        if(volumeType.includes(key)) {
+        if (volumeType.includes(key)) {
             const costPerGB = ebsMap[key];
             costPerMonth = costPerGB * size;
         }
@@ -66,7 +81,7 @@ function rewriteCreateVolumePage() {
 
     const infoDiv = sizeDiv.parent().next().next();
 
-    if(!infoDiv.text().includes("$")) {
+    if (!infoDiv.text().includes("$")) {
         infoDiv.text(costPerMonth + "$ / month " + infoDiv.text());
     } else {
         const stdText = infoDiv.text().split("(")[1];
@@ -75,45 +90,53 @@ function rewriteCreateVolumePage() {
 }
 
 function rewriteEBSTable() {
-    Object.keys(ebsMap).forEach(function (key) {
-        $("iframe#storage-gwt-frame").contents().find("div:contains(" + key +")").each(function (index, elm) {
-               //Only change the div that is in the table => only if the text is inside a <td>
+    if (window.location.href.toString().indexOf("LaunchInstanceWizard") === -1) {
+        Object.keys(ebsMap).forEach(function (key) {
+            $("iframe#storage-gwt-frame").contents().find("div:contains(" + key + ")").each(function (index, elm) {
+                //Only change the div that is in the table => only if the text is inside a <td>
                 if ($(this).closest("td").length === 1) {
 
                     const sizeOfDiskElm = $(this).parent().prev().children(":first");
                     if (!sizeOfDiskElm.text().includes("$")) {
                         const numGb = parseInt(sizeOfDiskElm.text().split(" ")[0], 10);
-                        sizeOfDiskElm.text(sizeOfDiskElm.text() + " (" + (ebsMap[key]*numGb) + "$ / month)");
+                        sizeOfDiskElm.text(sizeOfDiskElm.text() + " (" + (ebsMap[key] * numGb) + "$ / month)");
                     }
                 }
             });
-    });
+        });
+    }
 }
-
 
 
 var ec2Map = {};
 var seenInstanceTypes = null;
 
 function rewriteEC2() {
+    console.log("rewriteEC2");
+
     var tmpInstanceTypesSeen = new Set();
 
-    Object.keys(ec2Map).forEach(function (key) {
-        if(seenInstanceTypes == null || seenInstanceTypes.has(key)) {
-            $("div:contains(" + key + ")").each(function (index, elm) {
-                //Only change the div that is in the table => only if the text is inside a <td>
-                if ($(this).closest("td").length === 1) {
-                    if (!elm.textContent.includes("$")) {
-                        elm.innerText += " (" + ec2Map[key].hour + "$ / hour, " + ec2Map[key].month + "$ / month)";
+    if ((window.location.href.indexOf("LaunchInstanceWizard:") > -1 && seenInstanceTypes == null) || (window.location.href.indexOf("LaunchInstanceWizard:") === -1)) {
+        Object.keys(ec2Map).forEach(function (key) {
+            if (seenInstanceTypes == null || seenInstanceTypes.has(key)) {
+                $("div:contains(" + key + ")").each(function (index, elm) {
+                    //Only change the div that is in the table => only if the text is inside a <td>
+                    if ($(this).closest("td").length === 1) {
+                        if (!elm.textContent.includes("$")) {
+                            elm.innerText += " (" + ec2Map[key].hour + "$ / hour, " + ec2Map[key].month + "$ / month)";
+                        }
+                        tmpInstanceTypesSeen.add(key);
                     }
-                    tmpInstanceTypesSeen.add(key);
-                }
-            });
-        }
-    });
+                });
+            }
+        });
+    }
 
-    seenInstanceTypes = tmpInstanceTypesSeen;
-    if(seenInstanceTypes.size === 0) {
+    if (tmpInstanceTypesSeen.size > 0) {
+        seenInstanceTypes = tmpInstanceTypesSeen;
+    }
+
+    if (seenInstanceTypes != null && seenInstanceTypes.size === 0) {
         seenInstanceTypes = null;
     }
 }
