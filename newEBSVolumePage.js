@@ -27,7 +27,7 @@ function writeEBSData(data) {
 }
 
 function rewriteCreateVolumePage() {
-    if(window.location.href.toString().indexOf("#CreateVolume:") > -1) {
+    if(window.location.href.toString().indexOf("#CreateVolume:") > -1 || window.location.href.toString().indexOf("#LaunchInstanceWizard:") > -1 ) {
         const frame = $("iframe#storage-gwt-frame").contents();
 
         const volumeTypeDiv = frame.find("div#gwt-debug-VolumeType-label");
