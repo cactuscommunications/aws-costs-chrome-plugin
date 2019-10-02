@@ -36,7 +36,6 @@ function clearCache() {
     }
 }
 
-
 var ec2Map = {};
 var seenInstanceTypes = null;
 
