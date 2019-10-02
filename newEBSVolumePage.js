@@ -6,14 +6,14 @@ chrome.runtime.sendMessage({ebs: true}, function (ebsData) {
     writeEBSData(ebsData);
 });
 
-var uiToEBSJSONMap = new Map();
+const uiToEBSJSONMap = new Map();
 uiToEBSJSONMap.set("Magnetic", "standard");
 uiToEBSJSONMap.set("General Purpose", "gp2");
 uiToEBSJSONMap.set("Cold HDD", "sc1");
 uiToEBSJSONMap.set("Provisioned IOPS", "io1");
 uiToEBSJSONMap.set("Throughput Optimized HDD", "st1");
 
-var ebsMap = {};
+const ebsMap = {};
 
 function writeEBSData(data) {
     for (const price of data.prices) {
@@ -36,7 +36,7 @@ function rewriteCreateVolumePage() {
         const sizeDiv = frame.find("input#gwt-debug-Size");
         const size = parseInt(sizeDiv.val(), 10);
 
-        var costPerMonth = 0;
+        let costPerMonth = 0;
         Object.keys(ebsMap).forEach(function (key) {
             if (volumeType.includes(key)) {
                 const costPerGB = ebsMap[key];

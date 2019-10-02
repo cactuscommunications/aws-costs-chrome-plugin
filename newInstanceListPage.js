@@ -8,8 +8,8 @@ chrome.runtime.sendMessage({ec2: true}, function (ec2Data) {
 
 function writeEC2Data(data) {
     for (const price of data.prices) {
-        var type = price.attributes["aws:ec2:instanceType"];
-        var cost = {
+        const type = price.attributes["aws:ec2:instanceType"];
+        const cost = {
             "hour": parseFloat(price.price.USD).toFixed(3),
             "month": (parseFloat(price.price.USD) * 24 * 30).toFixed(0)
         };
@@ -22,7 +22,7 @@ var selectedItem = null;
 
 function handleNewInstanceListPage() {
     if (window.location.href.indexOf("#LaunchInstanceWizard:") > -1) {
-        var forceRefresh = false;
+        let forceRefresh = false;
 
         const newlySelectedItem = $("[aria-checked=true]").parent().parent().next().next().text();
 

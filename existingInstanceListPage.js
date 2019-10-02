@@ -10,10 +10,12 @@ chrome.runtime.sendMessage({ec2Deprecated: true}, function (ec2Deprecated) {
     writeEC2Data(ec2Deprecated);
 });
 
+const ec2Map = {};
+
 function writeEC2Data(data) {
     for (const price of data.prices) {
-        var type = price.attributes["aws:ec2:instanceType"];
-        var cost = {
+        const type = price.attributes["aws:ec2:instanceType"];
+        const cost = {
             "hour": parseFloat(price.price.USD).toFixed(3),
             "month": (parseFloat(price.price.USD) * 24 * 30).toFixed(0)
         };
@@ -23,7 +25,9 @@ function writeEC2Data(data) {
 
 self.setInterval(clearCache, 1000);
 
-var prevLocation = null;
+let prevLocation = null;
+
+let seenInstanceTypes = null;
 
 function clearCache() {
     if (prevLocation === null) {
@@ -36,12 +40,9 @@ function clearCache() {
     }
 }
 
-var ec2Map = {};
-var seenInstanceTypes = null;
-
 function handleExistingInstanceListPage() {
     if (window.location.href.indexOf("#Instances:") > -1) {
-        var tmpInstanceTypesSeen = new Set();
+        const tmpInstanceTypesSeen = new Set();
 
         Object.keys(ec2Map).forEach(function (key) {
             if (seenInstanceTypes == null || seenInstanceTypes.has(key)) {

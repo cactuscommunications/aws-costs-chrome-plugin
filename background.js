@@ -1,8 +1,11 @@
 'use strict';
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    let url;
+    console.log("RECEIVED MESSAGE");
+
     if (request.ec2) {
-        var url = "https://a0.p.awsstatic.com/pricing/1.0/ec2/region/us-east-1/ondemand/suse/index.json";
+        url = "https://a0.p.awsstatic.com/pricing/1.0/ec2/region/us-east-1/ondemand/suse/index.json";
 
         fetch(url)
             .then(function (response) {
@@ -12,7 +15,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 console.log(err);
             });
     } else if (request.ebs) {
-        var url = "https://a0.p.awsstatic.com/pricing/1.0/ec2/region/us-east-1/ebs/index.json";
+        url = "https://a0.p.awsstatic.com/pricing/1.0/ec2/region/us-east-1/ebs/index.json";
 
         fetch(url)
             .then(function (response) {
@@ -22,7 +25,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 console.log(err);
             });
     } else if (request.ec2Deprecated) {
-        var url = "https://a0.p.awsstatic.com/pricing/1.0/ec2/region/us-east-1/previous-generation/ondemand/linux/index.json";
+        url = "https://a0.p.awsstatic.com/pricing/1.0/ec2/region/us-east-1/previous-generation/ondemand/linux/index.json";
 
         fetch(url)
             .then(function (response) {
