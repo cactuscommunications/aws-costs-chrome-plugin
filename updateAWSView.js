@@ -46,11 +46,7 @@ function writeEC2Data(data) {
 
 function rewriteEBS() {
     Object.keys(ebsMap).forEach(function (key) {
-            console.log("Foreach EBS: " + key);
-
-            $("div:contains(" + key + ")").each(function (index, elm) {
-
-                console.log("Looking at div: " + elm);
+        $("iframe#storage-gwt-frame").contents().find("div:contains(" + key +")").each(function (index, elm) {
                //Only change the div that is in the table => only if the text is inside a <td>
                 if ($(this).closest("td").length === 1) {
                     if (!elm.textContent.includes("$")) {
