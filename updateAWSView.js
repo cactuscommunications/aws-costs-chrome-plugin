@@ -1,6 +1,7 @@
 'use strict';
 
-self.setInterval(rewriteEC2, 1000);
+self.setInterval(handleNewInstanceListPage, 1000);
+self.setInterval(handleExistingInstanceListPage, 1000);
 self.setInterval(rewriteEBSTable, 1000);
 self.setInterval(rewriteCreateVolumePage, 1000);
 self.setInterval(clearCache, 1000);
@@ -13,7 +14,6 @@ function clearCache() {
     }
 
     if (prevLocation.toString().indexOf(window.location.href.toString()) === -1) {
-        console.log("Clearing cache since location has changed from " + prevLocation + " to " + window.location.href);
         prevLocation = window.location.href;
         seenInstanceTypes = null;
     }
@@ -111,12 +111,10 @@ function rewriteEBSTable() {
 var ec2Map = {};
 var seenInstanceTypes = null;
 
-function rewriteEC2() {
-    console.log("rewriteEC2");
+function handleExistingInstanceListPage() {
+    if (window.location.href.indexOf("#Instances:") > -1) {
+        var tmpInstanceTypesSeen = new Set();
 
-    var tmpInstanceTypesSeen = new Set();
-
-    if ((window.location.href.indexOf("LaunchInstanceWizard:") > -1 && seenInstanceTypes == null) || (window.location.href.indexOf("LaunchInstanceWizard:") === -1)) {
         Object.keys(ec2Map).forEach(function (key) {
             if (seenInstanceTypes == null || seenInstanceTypes.has(key)) {
                 $("div:contains(" + key + ")").each(function (index, elm) {
@@ -130,14 +128,38 @@ function rewriteEC2() {
                 });
             }
         });
-    }
 
-    if (tmpInstanceTypesSeen.size > 0) {
         seenInstanceTypes = tmpInstanceTypesSeen;
+        if (seenInstanceTypes != null && seenInstanceTypes.size === 0) {
+            seenInstanceTypes = null;
+        }
+    }
+}
+
+var selectedItem = null;
+
+function handleNewInstanceListPage() {
+    var forceRefresh = false;
+
+    const newlySelectedItem = $("[aria-checked=true]").parent().parent().next().next().text();
+    console.log(newlySelectedItem);
+
+    if(selectedItem !== newlySelectedItem) {
+        selectedItem = newlySelectedItem;
+        forceRefresh = true;
     }
 
-    if (seenInstanceTypes != null && seenInstanceTypes.size === 0) {
-        seenInstanceTypes = null;
+    if ((window.location.href.indexOf("#LaunchInstanceWizard:") > -1) && selectedItem == null || forceRefresh) {
+        Object.keys(ec2Map).forEach(function (key) {
+            $("div:contains(" + key + ")").each(function (index, elm) {
+                //Only change the div that is in the table => only if the text is inside a <td>
+                if ($(this).closest("td").length === 1) {
+                    if (!elm.textContent.includes("$")) {
+                        elm.innerText += " (" + ec2Map[key].hour + "$ / hour, " + ec2Map[key].month + "$ / month)";
+                    }
+                }
+            });
+        });
     }
 }
 
