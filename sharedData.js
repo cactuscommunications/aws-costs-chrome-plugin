@@ -4,8 +4,6 @@ chrome.runtime.sendMessage({ebs: true}, function (ebsData) {
     writeEBSData(ebsData);
 });
 
-console.log("Running sharedData.js");
-
 const uiToEBSJSONMap = new Map();
 uiToEBSJSONMap.set("Magnetic", "standard");
 uiToEBSJSONMap.set("General Purpose", "gp2");

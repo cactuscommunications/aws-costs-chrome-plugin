@@ -18,7 +18,6 @@ function clearCache() {
 }
 
 function handleExistingInstanceListPage() {
-    console.log("Running the handle thing...");
     if (window.location.href.indexOf("#Instances:") > -1) {
         const tmpInstanceTypesSeen = new Set();
 

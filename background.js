@@ -2,7 +2,6 @@
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     let url;
-    console.log("RECEIVED MESSAGE");
 
     if (request.ec2) {
         url = "https://a0.p.awsstatic.com/pricing/1.0/ec2/region/us-east-1/ondemand/suse/index.json";
