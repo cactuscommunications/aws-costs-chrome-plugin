@@ -21,7 +21,7 @@ function handleNewInstanceListPage() {
                     //Only change the div that is in the table => only if the text is inside a <td>
                     if ($(this).closest("td").length === 1) {
                         if (!elm.textContent.includes("$")) {
-                            elm.innerText += " (" + ec2Map[key].hour + "$ / hour, " + ec2Map[key].month + "$ / month)";
+                            elm.innerText += " (" + ec2Map[key].hour + "$/hr, " + ec2Map[key].month + "$/mo)";
                         }
                     }
                 });

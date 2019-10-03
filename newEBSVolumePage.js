@@ -23,10 +23,10 @@ function rewriteCreateVolumePage() {
         const infoDiv = sizeDiv.parent().next().next();
 
         if (!infoDiv.text().includes("$")) {
-            infoDiv.text(costPerMonth + "$ / month " + infoDiv.text());
+            infoDiv.text(costPerMonth + "$/mo " + infoDiv.text());
         } else {
             const stdText = infoDiv.text().split("(")[1];
-            infoDiv.text(costPerMonth + "$ / month (" + stdText);
+            infoDiv.text(costPerMonth + "$/mo (" + stdText);
         }
     }
 }

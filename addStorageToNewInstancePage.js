@@ -24,7 +24,7 @@ function showVolumeCosts() {
                 }
             }
 
-            sizeDiv.find("div#aws-cost-div").text(costPerMonth + "$ / month");
+            sizeDiv.find("div#aws-cost-div").text(costPerMonth + "$/mo");
         });
     }
 }
