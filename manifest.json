@@ -2,7 +2,7 @@
   "name": "AWS Costs Plugin",
   "version": "0.1",
   "description": "Provide users with in-page information about AWS costs in us-east-1, by parsing the AWS JSON with costs transparently to the user. Provided as-is with no warranties.",
-  "permissions": ["activeTab", "declarativeContent", "storage"],
+  "permissions": ["activeTab", "storage", "https://console.aws.amazon.com/*", "https://a0.p.awsstatic.com/*"],
   "background": {
     "scripts": ["background.js"]
   },
