@@ -12,7 +12,7 @@ function rewriteEBSTable() {
                     const sizeOfDiskElm = $(this).parent().prev().children(":first");
                     if (!sizeOfDiskElm.text().includes("$")) {
                         const numGb = parseInt(sizeOfDiskElm.text().split(" ")[0], 10);
-                        sizeOfDiskElm.text(sizeOfDiskElm.text() + " (" + (ebsMap[key] * numGb) + "$ / month)");
+                        sizeOfDiskElm.text(sizeOfDiskElm.text() + " (" + (ebsMap[key] * numGb) + "$/mo)");
                     }
                 }
             });
