@@ -11,7 +11,7 @@ function addEBSPriceColumn() {
             //Find the instance type columnn, and insert a TH for cost / mo
             $(this).after($("<th colspan=\"1\" id='month_th' class=\"GLDQTD5BPJB GLDQTD5BOKB GLDQTD5BALB\"><div style=\"position:relative;zoom:1;padding-right:19px;\"><div style=\"position:absolute;top:50%;line-height:0px;margin-top:-10px;right:0px;\"></div><div __gwt_header=\"header-gwt-uid-1462\"><div class=\"GLDQTD5BAKB\">Price / Month</div></div><div class=\"GLDQTD5BLKB\"></div></div></th>"));
             iframe.find("th#month_th").click(function () {
-                sortByIframe("div.price_month_cell", curDirection);
+                sortByIframe("div.price_month_cell");
             });
 
             //This is the index number of the Instance Type table header

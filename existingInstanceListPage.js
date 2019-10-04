@@ -8,14 +8,14 @@ function addInstancePriceColumn() {
             //Find the instance type columnn, and insert a TH for cost / hour
             $(this).after($("<th colspan=\"1\" id='hour_th' class=\"GE42WOWBNKB GE42WOWBMLB\" __gwt_column=\"column-gwt-uid-4280\"><div style=\"position:relative;zoom:1;\"><div __gwt_header=\"header-gwt-uid-4281\"><div class=\"GE42WOWBOKB\">Price / Hour</div></div><div resize-col=\"5\" class=\"GE42WOWBJLB\"></div></div></th>"));
             $("th#hour_th").click(function () {
-                sortBy("div.price_hour_cell", curDirection);
+                sortBy("div.price_hour_cell");
             });
 
             //Find the instance type columnn, and insert a TH for cost / mo
             const costPerHourTH = $(this).next();
             costPerHourTH.after($("<th colspan=\"1\" id='month_th' class=\"GE42WOWBNKB GE42WOWBMLB\" __gwt_column=\"column-gwt-uid-4280\"><div style=\"position:relative;zoom:1;\"><div __gwt_header=\"header-gwt-uid-4281\"><div class=\"GE42WOWBOKB\">Price / Month</div></div><div resize-col=\"5\" class=\"GE42WOWBJLB\"></div></div></th>"));
             $("th#month_th").click(function () {
-                sortBy("div.price_month_cell", curDirection);
+                sortBy("div.price_month_cell");
             });
 
             //This is the index number of the Instance Type table header

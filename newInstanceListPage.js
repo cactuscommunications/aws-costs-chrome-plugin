@@ -13,15 +13,6 @@ function addCostColumnForNewInstance() {
 
         thForType.after(perHourTh);
         thForType.next().after(perMonthTh);
-
-
-        $("th#hourly_costs_th").click(function () {
-            sortBy("div.cost_per_hour_cell", curDirection);
-        });
-
-        $("th#monthly_costs_th").click(function () {
-            sortBy("div.cost_per_month_cell", curDirection);
-        });
     }
 
     const containingTable = thForType.closest("table");
@@ -29,10 +20,7 @@ function addCostColumnForNewInstance() {
 
         if(!$(this).find("div.cost_per_hour_cell").length) {
 
-            let theClass = "GE42WOWBMKD GE42WOWBOKD";
-            if($(this).find("span[class=\"GE42WOWBLWD GE42WOWBNWD\"]").length) {
-                theClass += " GE42WOWBCMD GE42WOWBKLD";
-            }
+            let theClass = $(this).find("td").first().attr("class");
 
             const costsPerHourCell = $("<td class=\"" + theClass + "\"><div style=\"outline-style:none;\" __gwt_cell=\"cell-gwt-uid-2752\" class='cost_per_hour_cell'></div></td>");
             const costsPerMonthCell = $("<td class=\"" + theClass + "\"><div style=\"outline-style:none;\" __gwt_cell=\"cell-gwt-uid-2752\" class='cost_per_month_cell'></div></td>");
