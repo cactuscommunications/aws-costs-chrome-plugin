@@ -3,8 +3,7 @@
 self.setInterval(handleExistingInstanceListPage, 1000);
 
 function addPriceColumn() {
-    //We're on the instances page, and we havn't already added the columns we want
-    if (window.location.href.indexOf("#Instances:") > -1 && !$("th:contains(Price)").length) {
+    if (!$("th:contains(Price)").length) {
 
         $("th:contains(Instance Type)").each(function (index, elm) {
             //Find the instance type columnn, and insert a TH for cost / hour
@@ -32,28 +31,10 @@ function addPriceColumn() {
     }
 }
 
-let curDirection = true;
-function sortBy(selector, direction) {
-    const perHourTbody = $("table").last().find("tbody");
-    const instanceTable = perHourTbody.children().sort(function(a,b) {
-        const price1 = parseFloat($(a).find(selector).text().split("$")[0]);
-        const price2 = parseFloat($(b).find(selector).text().split("$")[0]);
-        if(direction) {
-            return price1 - price2;
-        } else {
-            return price2 - price1;
-        }
-    });
-
-    instanceTable.appendTo(perHourTbody);
-
-    curDirection = !direction;
-}
-
 function handleExistingInstanceListPage() {
-    addPriceColumn();
-
     if (window.location.href.indexOf("#Instances:") > -1) {
+        addPriceColumn();
+
         $(".price_hour_cell").each(function (index, elm) {
             if (!$(this).text().includes("$")) {
                 const instanceType = $(this).parent().prev().text();
