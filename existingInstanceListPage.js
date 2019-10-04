@@ -64,7 +64,7 @@ function handleExistingInstanceListPage() {
         $(".price_month_cell").each(function (index, elm) {
             if (!$(this).text().includes("$")) {
                 const instanceType = $(this).parent().prev().prev().text();
-                $(this).text(reportPerHourNumber(ec2Map[instanceType].month));
+                $(this).text(reportPerMonthNumber(ec2Map[instanceType].month));
             }
         });
     }
