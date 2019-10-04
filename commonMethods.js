@@ -12,7 +12,7 @@ function sortByIframe(selector, direction) {
 }
 
 function sortBy(selector, direction) {
-    sortBy($("table").last().find("tbody"), selector, direction);
+    sortByInternal($("table").last().find("tbody"), selector, direction);
 }
 
 function sortByInternal(tbody, selector, direction) {
