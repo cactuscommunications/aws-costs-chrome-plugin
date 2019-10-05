@@ -1,6 +1,6 @@
 'use strict';
 
-self.setInterval(rewriteEBSTable, 1000);
+self.setInterval(rewriteRDSTable, 1000);
 
 function addRDSColumns() {
     const sizeSpan = $("span:contains(Size):not(:has(span))").last();
@@ -32,7 +32,7 @@ function addRDSColumns() {
     });
 }
 
-function rewriteEBSTable() {
+function rewriteRDSTable() {
     if (window.location.href.toString().indexOf("#databases:") !== -1) {
         addRDSColumns();
 

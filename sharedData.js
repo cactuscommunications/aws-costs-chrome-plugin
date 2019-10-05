@@ -45,7 +45,7 @@ function writeEC2Data(data) {
     }
 }
 
-chrome.runtime.sendMessage({RDS : true}, function (data) {
+chrome.runtime.sendMessage({RDS: true}, function (data) {
     parseDBData(data["data"]);
     parseStorageData(data["storageData"]);
 });
@@ -62,8 +62,38 @@ function parseDBData(dbData) {
 
 function parseStorageData(storageData) {
     for (const data of storageData.prices) {
-        if(data.attributes["aws:rds:usagetype"] === "RDS:GP2-Storage") {
+        if (data.attributes["aws:rds:usagetype"] === "RDS:GP2-Storage") {
             rdsCostPerGBPerMonth = parseFloat(data.price.USD).toFixed(3);
+        }
+    }
+}
+
+const rdsAllocatedStorageMap = {};
+
+self.setInterval(parseRDSTBUsed, 1000);
+
+function parseAccount() {
+    return $("a#nav-usernameMenu").children().first().text();
+}
+
+function getRDSDBSizeForAccount() {
+    if (parseAccount() in rdsAllocatedStorageMap) {
+        return rdsAllocatedStorageMap[parseAccount()];
+    } else {
+        return "Unknown";
+    }
+}
+
+function parseRDSTBUsed() {
+    if (!window.location.href.toString().endsWith(":")) {
+        const accountKey = parseAccount();
+        if (parseAccount() !== "Unknown") {
+            const allocatedText = $("li:contains(Allocated):not(:has(li))").first().text();
+            if(allocatedText !== undefined && allocatedText.indexOf("Allocated storage") !== -1 && allocatedText.indexOf("TB") !== -1) {
+                const tb = parseFloat(allocatedText.split("(")[1].split(" ")[0]);
+
+                rdsAllocatedStorageMap[accountKey] = tb;
+            }
         }
     }
 }
