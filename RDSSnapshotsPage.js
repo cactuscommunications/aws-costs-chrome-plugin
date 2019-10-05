@@ -18,7 +18,7 @@ function rewriteRDSSnapshotPage() {
             const snapshotsSize = calculateSnapshotGB();
 
             const gbToPayFor = (snapshotsSize - getRDSDBSizeForAccount() * 1000);
-            const priceForSnapshotsPerMonth = gbToPayFor * 0.15;
+            const priceForSnapshotsPerMonth = gbToPayFor * 0.095;
 
             if ($("span#snapshot_cost_span").length) {
                 snapshotsSpan.parent().next().remove();
