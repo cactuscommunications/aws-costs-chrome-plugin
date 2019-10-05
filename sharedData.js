@@ -44,3 +44,26 @@ function writeEC2Data(data) {
         ec2Map[type] = cost;
     }
 }
+
+chrome.runtime.sendMessage({RDS : true}, function (data) {
+    parseDBData(data["data"]);
+    parseStorageData(data["storageData"]);
+});
+
+const rdsMap = {};
+var rdsCostPerGBPerMonth = 0;
+
+function parseDBData(dbData) {
+    for (const data of dbData.prices) {
+        const type = data.attributes["aws:rds:instanceType"];
+        rdsMap[type] = (parseFloat(data.price.USD) * 24 * 30).toFixed(0);
+    }
+}
+
+function parseStorageData(storageData) {
+    for (const data of storageData.prices) {
+        if(data.attributes["aws:rds:usagetype"] === "RDS:GP2-Storage") {
+            rdsCostPerGBPerMonth = parseFloat(data.price.USD).toFixed(3);
+        }
+    }
+}

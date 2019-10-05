@@ -33,6 +33,24 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             .catch(function (err) {
                 console.log(err);
             });
+    } else if (request.RDS) {
+        const mySQLurl = "https://a0.p.awsstatic.com/pricing/1.0/rds/mysql/ondemand/multi-az/index.json";
+        const storageURL = "https://a0.p.awsstatic.com/pricing/1.0/rds/database-storage/index.json";
+
+        fetch(mySQLurl)
+            .then(function (response) {
+                response.json().then(function (data) {
+                        fetch(storageURL)
+                                .then(function (storageResponse) {
+                                    storageResponse.json().then(function (storageData) {
+                                        sendResponse( { "data" : data, "storageData" : storageData } );
+                                    });
+                            })
+                    });
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
     }
-  return true;
+    return true;
 });
