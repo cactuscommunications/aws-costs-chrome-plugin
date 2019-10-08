@@ -1,4 +1,5 @@
 'use strict';
+
 const regionToIDMap = {};
 regionToIDMap["US East (N. Virginia)"] = "us-east-1";
 regionToIDMap["US East (Ohio)"] = "us-east-2";
@@ -30,17 +31,17 @@ function getAWSRegion() {
 
 function getEC2InstancePrices(instanceType) {
     const awsRegion = getAWSRegion();
-    const nullMap = {"hour" : 0.0, "month" : 0.0};
+    const nullMap = {"hour": 0.0, "month": 0.0};
 
-    if(Object.keys(regionToEC2Map).includes(awsRegion)) {
+    if (Object.keys(regionToEC2Map).includes(awsRegion)) {
         const map = regionToEC2Map[awsRegion];
-        if(map != null) {
+        if (map != null) {
             return map[instanceType];
         } else {
             return nullMap;
         }
     } else {
-        chrome.runtime.sendMessage({ec2 : true, region : awsRegion}, function (data) {
+        chrome.runtime.sendMessage({ec2: true, region: awsRegion}, function (data) {
             writeEC2Data(data["data"], data["deprecatedData"], awsRegion);
         });
 
@@ -70,9 +71,6 @@ function writeEC2Data(data, deprecatedData, awsRegion) {
     regionToEC2Map[awsRegion] = tmpMap;
 }
 
-
-
-
 const uiToEBSJSONMap = new Map();
 uiToEBSJSONMap.set("Magnetic", "standard");
 uiToEBSJSONMap.set("General Purpose", "gp2");
@@ -98,7 +96,7 @@ function writeEBSData(data, awsRegion) {
 
 function getEBSMap() {
     const map = regionToEBSMap[awsRegion];
-    if(map != null) {
+    if (map != null) {
         return map;
     } else {
         return {};
@@ -107,11 +105,11 @@ function getEBSMap() {
 
 function getEBSMonthlyPricePerGB(ebsType) {
     const awsRegion = getAWSRegion();
-    const nullMap = {ebsType : 0.0};
+    const nullMap = {ebsType: 0.0};
 
-    if(Object.keys(regionToEBSMap).includes(awsRegion)) {
+    if (Object.keys(regionToEBSMap).includes(awsRegion)) {
         const map = regionToEBSMap[awsRegion];
-        if(map != null) {
+        if (map != null) {
             return map[ebsType];
         } else {
             return nullMap;
@@ -126,59 +124,40 @@ function getEBSMonthlyPricePerGB(ebsType) {
 }
 
 
-chrome.runtime.sendMessage({RDS: true}, function (data) {
-    parseDBData(data["data"]);
-    parseStorageData(data["storageData"]);
-});
+const regionToRDSCostMap = {};
 
-const rdsMap = {};
-var rdsCostPerGBPerMonth = 0;
+function getRDSCosts() {
+    const awsRegion = getAWSRegion();
+    const nullMap = { driveCost: 0.0};
 
-function parseDBData(dbData) {
+    if (Object.keys(regionToRDSCostMap).includes(awsRegion)) {
+        const map = regionToRDSCostMap[awsRegion];
+        if (map != null) {
+            return map;
+        } else {
+            return nullMap;
+        }
+    } else {
+        chrome.runtime.sendMessage({RDS: true}, function (data) {
+            parseInstanceData(data["data"], data["storageData"], awsRegion);
+        });
+
+        return nullMap;
+    }
+}
+
+function parseInstanceData(dbData, storageData, awsRegion) {
+    const tmpMap = {};
     for (const data of dbData.prices) {
         const type = data.attributes["aws:rds:instanceType"];
-        rdsMap[type] = (parseFloat(data.price.USD) * 24 * 30).toFixed(0);
+        tmpMap[type] = (parseFloat(data.price.USD) * 24 * 30).toFixed(0);
     }
-}
 
-function parseStorageData(storageData) {
     for (const data of storageData.prices) {
         if (data.attributes["aws:rds:usagetype"] === "RDS:GP2-Storage") {
-            rdsCostPerGBPerMonth = parseFloat(data.price.USD).toFixed(3);
+            tmpMap["gbpCost"] = parseFloat(data.price.USD).toFixed(3);
         }
     }
-}
 
-
-
-
-
-const rdsAllocatedStorageMap = {};
-
-self.setInterval(parseRDSTBUsed, 1000);
-
-function parseAccount() {
-    return $("a#nav-usernameMenu").children().first().text();
-}
-
-function getRDSDBSizeForAccount() {
-    if (parseAccount() in rdsAllocatedStorageMap) {
-        return rdsAllocatedStorageMap[parseAccount()];
-    } else {
-        return "Unknown";
-    }
-}
-
-function parseRDSTBUsed() {
-    if (!window.location.href.toString().endsWith(":")) {
-        const accountKey = parseAccount();
-        if (parseAccount() !== "Unknown") {
-            const allocatedText = $("li:contains(Allocated):not(:has(li))").first().text();
-            if(allocatedText !== undefined && allocatedText.indexOf("Allocated storage") !== -1 && allocatedText.indexOf("TB") !== -1) {
-                const tb = parseFloat(allocatedText.split("(")[1].split(" ")[0]);
-
-                rdsAllocatedStorageMap[accountKey] = tb;
-            }
-        }
-    }
+    regionToRDSCostMap[awsRegion] = tmpMap;
 }

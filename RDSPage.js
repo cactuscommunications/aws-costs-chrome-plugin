@@ -27,7 +27,7 @@ function addRDSColumns() {
     table.find("tr").each(function (index, elm) {
         if (!$(this).find("span.instance_month_cell").length) {
             $(this).find("td:eq(" + indexNumber + ")").after($("<td class=\"dark-bottom-border\"><span><span class='instance_month_cell'></span></span></td>"));
-            $(this).find("td:eq(" + (indexNumber+1) + ")").after($("<td class=\"dark-bottom-border\"><span><span class='storage_month_cell'></span></span></td>"));
+            $(this).find("td:eq(" + (indexNumber + 1) + ")").after($("<td class=\"dark-bottom-border\"><span><span class='storage_month_cell'></span></span></td>"));
         }
     });
 }
@@ -43,10 +43,9 @@ function rewriteRDSTable() {
             const rdsType = $(this).closest("td").prev().text();
             const numGb = parseInt($(this).closest("tr").find("td:eq(" + storageTh.index() + ")").first().text().split(" ")[0]);
 
-            if(!$(this).text().includes("$")) {
-                $(this).text(reportPerMonthNumber((rdsMap[rdsType])));
-                $(this).closest("td").next().find("span.storage_month_cell").first().text(reportPerMonthNumber((numGb * rdsCostPerGBPerMonth).toFixed(2)));
-            }
+            const rdsCosts = getRDSCosts();
+            $(this).text(reportPerMonthNumber((rdsCosts[rdsType])));
+            $(this).closest("td").next().find("span.storage_month_cell").first().text(reportPerMonthNumber((numGb * rdsCosts["gbpCost"]).toFixed(2)));
         });
     }
 }
