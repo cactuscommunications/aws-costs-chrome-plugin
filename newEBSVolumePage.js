@@ -25,9 +25,9 @@ function rewriteCreateVolumePage() {
         const size = parseInt(sizeDiv.val(), 10);
 
         let costPerMonth = 0;
-        Object.keys(ebsMap).forEach(function (key) {
+        Object.keys(getEBSMap()).forEach(function (key) {
             if (volumeType.includes(key)) {
-                const costPerGB = ebsMap[key];
+                const costPerGB = getEBSMonthlyPricePerGB(key);
                 costPerMonth = costPerGB * size;
             }
         });

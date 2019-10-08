@@ -33,9 +33,7 @@ function rewriteEBSTable() {
             const ebsType = $(this).parent().next().text();
             const numGb = parseInt($(this).parent().prev().text().split(" ")[0]);
 
-            if(!$(this).text().includes("$")) {
-                $(this).text(reportPerMonthNumber((ebsMap[ebsType] * numGb)))
-            }
+            $(this).text(reportPerMonthNumber((getEBSMonthlyPricePerGB(ebsType) * numGb)))
         });
     }
 }

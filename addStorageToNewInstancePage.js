@@ -10,9 +10,9 @@ function showVolumeCosts() {
             const volumeType = $(this).val();
 
             var costPerMonth = 0;
-            Object.keys(ebsMap).forEach(function (key) {
+            Object.keys(getEBSMap()).forEach(function (key) {
                 if (volumeType.includes(key)) {
-                    const costPerGB = ebsMap[key];
+                    const costPerGB = getEBSMonthlyPricePerGB(key);
                     costPerMonth = costPerGB * size;
                 }
             });
