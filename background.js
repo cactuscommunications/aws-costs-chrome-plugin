@@ -4,8 +4,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         let url;
 
         if (request.ec2) {
-            url = "https://a0.p.awsstatic.com/pricing/1.0/ec2/region/us-east-1/ondemand/linux/index.json";
-            const deprecatedUrl = "https://a0.p.awsstatic.com/pricing/1.0/ec2/region/us-east-1/previous-generation/ondemand/linux/index.json";
+            url = "https://a0.p.awsstatic.com/pricing/1.0/ec2/region/" + request.region + "/ondemand/linux/index.json";
+            const deprecatedUrl = "https://a0.p.awsstatic.com/pricing/1.0/ec2/region/" + request.region + "/previous-generation/ondemand/linux/index.json";
 
             fetch(url)
                 .then(function (response) {
@@ -22,7 +22,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                     console.log(err);
                 });
         } else if (request.ebs) {
-            url = "https://a0.p.awsstatic.com/pricing/1.0/ec2/region/us-east-1/ebs/index.json";
+            url = "https://a0.p.awsstatic.com/pricing/1.0/ec2/region/" + request.region + "/ebs/index.json";
 
             fetch(url)
                 .then(function (response) {

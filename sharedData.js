@@ -115,7 +115,7 @@ function getEBSMonthlyPricePerGB(ebsType) {
             return nullMap;
         }
     } else {
-        chrome.runtime.sendMessage({ebs: true}, function (ebsData) {
+        chrome.runtime.sendMessage({ebs: true, region : awsRegion}, function (ebsData) {
             writeEBSData(ebsData, awsRegion);
         });
 
@@ -138,7 +138,7 @@ function getRDSCosts() {
             return nullMap;
         }
     } else {
-        chrome.runtime.sendMessage({RDS: true}, function (data) {
+        chrome.runtime.sendMessage({RDS: true, region : awsRegion}, function (data) {
             parseInstanceData(data["data"], data["storageData"], awsRegion);
         });
 
