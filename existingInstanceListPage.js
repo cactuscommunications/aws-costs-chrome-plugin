@@ -35,17 +35,13 @@ function handleExistingInstanceListPage() {
         addInstancePriceColumn();
 
         $(".price_hour_cell").each(function (index, elm) {
-            if (!$(this).text().includes("$")) {
-                const instanceType = $(this).parent().prev().text();
-                $(this).text(reportPerHourNumber(ec2Map[instanceType].hour));
-            }
+            const instanceType = $(this).parent().prev().text();
+            $(this).text(reportPerHourNumber(getEC2InstancePrices(instanceType).hour));
         });
 
         $(".price_month_cell").each(function (index, elm) {
-            if (!$(this).text().includes("$")) {
-                const instanceType = $(this).parent().prev().prev().text();
-                $(this).text(reportPerMonthNumber(ec2Map[instanceType].month));
-            }
+            const instanceType = $(this).parent().prev().prev().text();
+            $(this).text(reportPerMonthNumber(getEC2InstancePrices(instanceType).month));
         });
     }
 }

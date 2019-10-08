@@ -42,12 +42,12 @@ function handleNewInstanceListPage() {
 
         $(".cost_per_hour_cell").each(function (index, elm) {
             const type = $(this).parent().prev().text().replace("Free tier eligible", "");
-            $(this).text(reportPerHourNumber(ec2Map[type].hour));
+            $(this).text(reportPerHourNumber(getEC2InstancePrices(type).hour));
         });
 
         $(".cost_per_month_cell").each(function (index, elm) {
             const type = $(this).parent().prev().prev().text().replace("Free tier eligible", "");
-            $(this).text(reportPerMonthNumber(ec2Map[type].month));
+            $(this).text(reportPerMonthNumber(getEC2InstancePrices(type).month));
         });
     }
 }
