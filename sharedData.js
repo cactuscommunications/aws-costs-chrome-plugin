@@ -44,6 +44,8 @@ function getEC2InstancePrices(instanceType) {
         chrome.runtime.sendMessage({ec2: true, region: awsRegion}, function (data) {
             writeEC2Data(data["data"], data["deprecatedData"], awsRegion);
         });
+        chrome.runtime.sendMessage({ec2_spot : true}, function (data) {
+        });
 
         return nullMap;
     }

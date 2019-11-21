@@ -2,14 +2,14 @@
   "name": "AWS Costs Plugin",
   "version": "0.4",
   "description": "Provide users with in-page information about AWS costs in AWS regions, by parsing the AWS JSON with costs transparently to the user.",
-  "permissions": ["activeTab", "storage", "https://console.aws.amazon.com/*", "https://a0.p.awsstatic.com/*",  "https://*.console.aws.amazon.com/*"],
+  "permissions": ["activeTab", "storage", "https://console.aws.amazon.com/*", "https://a0.p.awsstatic.com/*",  "https://*.console.aws.amazon.com/*", "https://website.spot.ec2.aws.a2z.com/*"],
   "background": {
     "scripts": ["background.js"]
   },
   "content_scripts": [
     {
       "js": [ "jquery-3.4.1.js", "commonMethods.js", "sharedData.js", "newInstanceListPage.js", "newEBSVolumePage.js", "existingInstanceListPage.js", "existingEBSVolumesListPage.js", "addStorageToNewInstancePage.js", "RDSPage.js", "RDSSnapshotsPage.js"],
-      "matches": ["https://console.aws.amazon.com/*", "https://a0.p.awsstatic.com/*", "https://*.console.aws.amazon.com/*"],
+      "matches": ["https://console.aws.amazon.com/*", "https://a0.p.awsstatic.com/*", "https://*.console.aws.amazon.com/*", "https://website.spot.ec2.aws.a2z.com/*"],
       "run_at" : "document_end"
     }
   ],
