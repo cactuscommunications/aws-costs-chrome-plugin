@@ -12,6 +12,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         if (request.ec2) {
             url = "https://a0.p.awsstatic.com/pricing/1.0/ec2/region/" + request.region + "/ondemand/linux/index.json";
             const deprecatedUrl = "https://a0.p.awsstatic.com/pricing/1.0/ec2/region/" + request.region + "/previous-generation/ondemand/linux/index.json";
+            const spotUrl = "https://website.spot.ec2.aws.a2z.com/spot.js?callback=callback";
 
             fetch(url)
                 .then(function (response) {
@@ -19,7 +20,20 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                         fetch(deprecatedUrl)
                             .then(function (deprecatedDataResponse) {
                                 deprecatedDataResponse.json().then(function (deprecatedData) {
-                                    sendResponse({"data": data, "deprecatedData": deprecatedData});
+                                    fetch(spotUrl)
+                                        .then(function (response) {
+                                            response.text().then(function (text) {
+                                                text = text.replace("callback(", "");
+                                                text = text.replace(");", "");
+                                                sendResponse({
+                                                    "data": data,
+                                                    "deprecatedData": deprecatedData,
+                                                    "spotData": JSON.parse(text)
+                                                });
+                                            });
+                                        }).catch(function (err) {
+                                        console.log(err);
+                                    });
                                 });
                             });
                     });
@@ -58,21 +72,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 .catch(function (err) {
                     console.log(err);
                 });
-        } else if (request.ec2_spot) {
-            //This should return data for all regions
-            url = "https://website.spot.ec2.aws.a2z.com/spot.js?callback=callback";
-
-            fetch(url)
-                .then(function (response) {
-                    response.text().then(function (text) {
-                        text = text.replace("callback(", "");
-                        text = text.replace(");", "");
-                        sendResponse({"data": JSON.parse(text)});
-                    });
-                }).
-            catch(function (err) {
-                console.log(err);
-            });
         }
         return true;
     }

@@ -42,16 +42,14 @@ function getEC2InstancePrices(instanceType) {
         }
     } else {
         chrome.runtime.sendMessage({ec2: true, region: awsRegion}, function (data) {
-            writeEC2Data(data["data"], data["deprecatedData"], awsRegion);
-        });
-        chrome.runtime.sendMessage({ec2_spot : true}, function (data) {
+            writeEC2Data(data["data"], data["deprecatedData"], data["spotData"], awsRegion);
         });
 
         return nullMap;
     }
 }
 
-function writeEC2Data(data, deprecatedData, awsRegion) {
+function writeEC2Data(data, deprecatedData, spotData, awsRegion) {
     const tmpMap = {};
     for (const price of data.prices) {
         const type = price.attributes["aws:ec2:instanceType"];
