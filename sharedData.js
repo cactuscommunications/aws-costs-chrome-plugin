@@ -61,8 +61,6 @@ function spotPriceInRegion(spotData, instanceType, awsRegion) {
         awsRegionToFind = "us-east";
     }
 
-    //console.log("Trying to find spot price for " + instanceTypeToFind + " in " + awsRegion);
-
     const regionsArray = spotData.config.regions;
     for(let regionArrayIndex in regionsArray) {
         const theRegion = regionsArray[regionArrayIndex];
@@ -124,6 +122,7 @@ function writeEC2Data(data, deprecatedData, spotData, awsRegion) {
 const uiToEBSJSONMap = new Map();
 uiToEBSJSONMap.set("Magnetic", "standard");
 uiToEBSJSONMap.set("General Purpose", "gp2");
+uiToEBSJSONMap.set("General Purpose SSD (gp2)", "gp2");
 uiToEBSJSONMap.set("Cold HDD", "sc1");
 uiToEBSJSONMap.set("Provisioned IOPS", "io1");
 uiToEBSJSONMap.set("Throughput Optimized HDD", "st1");
@@ -145,7 +144,7 @@ function writeEBSData(data, awsRegion) {
 }
 
 function getEBSMap() {
-    const map = regionToEBSMap[awsRegion];
+    const map = regionToEBSMap[getAWSRegion()];
     if (map != null) {
         return map;
     } else {
