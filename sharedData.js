@@ -82,7 +82,7 @@ function spotPriceInRegion(spotData, instanceType, awsRegion) {
             }
         }
     }
-    return 0.1;
+    return 0.0;
 }
 
 function writeEC2Data(data, deprecatedData, spotData, awsRegion) {
