@@ -1,11 +1,13 @@
 'use strict';
 
 self.setInterval(handleNewInstanceListPage, 1000);
+var lifecycleTablePosition = 0;
 
 function addCostColumnForNewInstance() {
     const typeDiv = $("span:contains(Type):not(:has(span)):not(:contains(Choose))").first();
     const thForType = typeDiv.parent().parent().parent().parent();
     const columnIndex = thForType.index();
+    lifecycleTablePosition = $("th:contains(Lifecycle):not(:has(span))").first();
 
     if (!$("#hourly_costs_th").length) {
         const perHourTh = $("<th id='hourly_costs_th' colspan=\"1\" class=\"GE42WOWBELD GE42WOWBDMD\"><div style=\"position:relative;zoom:1;\"><div><span><span class=\"GE42WOWBBNI\">Cost / hour</span> <span class=\"GE42WOWBCNI\"></span></span></div><div resize-col=\"2\" class=\"GE42WOWBLMD\"></div></div></th>");
@@ -42,12 +44,12 @@ function handleNewInstanceListPage() {
 
         $(".cost_per_hour_cell").each(function (index, elm) {
             const type = $(this).parent().prev().text().replace("Free tier eligible", "");
-            $(this).text(reportPerHourNumber(getEC2InstancePrices(type).hour));
+            $(this).text(reportPerHourNumber(getEC2InstancePrices(type, false).hour));
         });
 
         $(".cost_per_month_cell").each(function (index, elm) {
             const type = $(this).parent().prev().prev().text().replace("Free tier eligible", "");
-            $(this).text(reportPerMonthNumber(getEC2InstancePrices(type).month));
+            $(this).text(reportPerMonthNumber(getEC2InstancePrices(type, false).month));
         });
     }
 }

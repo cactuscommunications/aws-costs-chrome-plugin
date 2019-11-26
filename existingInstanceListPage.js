@@ -30,18 +30,25 @@ function addInstancePriceColumn() {
     }
 }
 
+function isSpot(elm) {
+    if(elm.parent().parent().find("td:contains(normal)").length) {
+        return false;
+    }
+    return true;
+}
+
 function handleExistingInstanceListPage() {
     if (window.location.href.indexOf("#Instances:") > -1) {
         addInstancePriceColumn();
 
         $(".price_hour_cell").each(function (index, elm) {
             const instanceType = $(this).parent().prev().text();
-            $(this).text(reportPerHourNumber(getEC2InstancePrices(instanceType).hour));
+            $(this).text(reportPerHourNumber(getEC2InstancePrices(instanceType, isSpot($(this))).hour));
         });
 
         $(".price_month_cell").each(function (index, elm) {
             const instanceType = $(this).parent().prev().prev().text();
-            $(this).text(reportPerMonthNumber(getEC2InstancePrices(instanceType).month));
+            $(this).text(reportPerMonthNumber(getEC2InstancePrices(instanceType, isSpot($(this))).month));
         });
     }
 }
