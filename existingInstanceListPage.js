@@ -31,10 +31,10 @@ function addInstancePriceColumn() {
 }
 
 function isSpot(elm) {
-    if(elm.parent().parent().find("td:contains(normal)").length) {
-        return false;
+    if(elm.parent().parent().find("td:contains(spot)").length) {
+        return true;
     }
-    return true;
+    return false;
 }
 
 function handleExistingInstanceListPage() {
