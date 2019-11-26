@@ -76,7 +76,6 @@ function spotPriceInRegion(spotData, instanceType, awsRegion) {
                     const theInstanceType = instanceTypesInRegion[instanceTypeIndex];
                     if (theInstanceType.size === instanceType) {
                         const priceForLinux = theInstanceType.valueColumns[0].prices.USD;
-                        console.log("Found price as " + priceForLinux);
                         return priceForLinux;
                     }
                 }
