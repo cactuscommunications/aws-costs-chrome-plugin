@@ -1,6 +1,6 @@
 const regionToEC2Map = {};
 
-export function getEC2InstancePrices(instanceType, isSpot) {
+function getEC2InstancePrices(instanceType, isSpot) {
     const awsRegion = getAWSRegion();
 
     const nullMap = {"ondemand": {"hour": 0.0, "month": 0.0}, "spot": {"hour": 0.0, "month": 0.0}};

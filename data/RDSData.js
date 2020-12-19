@@ -1,6 +1,6 @@
 const regionToRDSCostMap = {};
 
-export function getRDSCosts() {
+function getRDSCosts() {
     const awsRegion = getAWSRegion();
     const nullMap = {driveCost: 0.0};
 

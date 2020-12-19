@@ -1,4 +1,4 @@
-export const regionToIDMap = {};
+const regionToIDMap = {};
 regionToIDMap["N. Virginia"] = "us-east-1";
 regionToIDMap["US East (N. Virginia)"] = "us-east-1";
 
@@ -56,7 +56,15 @@ regionToIDMap["Middle East (Bahrain)"] = "me-south-1";
 regionToIDMap["Sao Paulo"] = "sa-east-1";
 regionToIDMap["South America (Sao Paulo)"] = "sa-east-1";
 
-export function getAWSRegion() {
-    const currentRegion = $("a#nav-regionMenu").children().first().text();
-    return regionToIDMap[currentRegion];
+function getAWSRegion() {
+    $("button").each(function (index, elm) {
+        const btnControls = $(this).attr("aria-controls");
+        if(btnControls != null && btnControls === "menu--regions") {
+            const currentRegion = $(this).children().first().children().first().text();
+            return regionToIDMap[currentRegion];
+        }
+    });
+
+    //SGA - hack to get this runing for demo purposes
+    return regionToIDMap["N. Virginia"];
 }

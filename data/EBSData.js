@@ -22,7 +22,7 @@ function writeEBSData(data, awsRegion) {
     regionToEBSMap[awsRegion] = tmpMap;
 }
 
-export function getEBSMap() {
+function getEBSMap() {
     const map = regionToEBSMap[getAWSRegion()];
     if (map != null) {
         return map;
@@ -31,7 +31,7 @@ export function getEBSMap() {
     }
 }
 
-export function getEBSMonthlyPricePerGB(ebsType) {
+function getEBSMonthlyPricePerGB(ebsType) {
     const awsRegion = getAWSRegion();
     const nullMap = {ebsType: 0.0};
 
